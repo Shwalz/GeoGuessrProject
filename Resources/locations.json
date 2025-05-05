@@ -1,0 +1,68 @@
+﻿{
+  "Easy": [
+    {
+      "Latitude": 48.856986,
+      "Longitude": 2.2942085
+    }, 
+    {
+      "Latitude": 40.6892494,
+      "Longitude": -74.0445004
+    }, 
+    {
+      "Latitude": 51.5007292,
+      "Longitude": -0.1246254
+    }, 
+    {
+      "Latitude": 27.175015,
+      "Longitude": 78.042155
+    }, 
+    {
+      "Latitude": -33.8567844,
+      "Longitude": 151.213108
+    } 
+  ],
+  "Medium": [
+    {
+      "Latitude": 35.658581,
+      "Longitude": 139.745433
+    }, 
+    {
+      "Latitude": 41.8902102,
+      "Longitude": 12.4922309
+    }, 
+    {
+      "Latitude": 43.723,
+      "Longitude": 10.3966
+    },
+    {
+      "Latitude": 30.3285,
+      "Longitude": 35.4444
+    }, 
+    {
+      "Latitude": 25.1972,
+      "Longitude": 55.2744
+    } 
+  ],
+  "Hard": [
+    {
+      "Latitude": -22.951916,
+      "Longitude": -43.2104872
+    }, 
+    {
+      "Latitude": -13.1631,
+      "Longitude": -72.545
+    }, 
+    {
+      "Latitude": -24.7406,
+      "Longitude": 26.1833
+    }, 
+    {
+      "Latitude": 64.9631,
+      "Longitude": -19.0208
+    }, 
+    {
+      "Latitude": -75.250973,
+      "Longitude": -0.071389
+    } 
+  ]
+}
