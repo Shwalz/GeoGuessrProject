@@ -13,6 +13,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Update="Resources\locations - kopiować.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="Resources\star_background.jpg">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

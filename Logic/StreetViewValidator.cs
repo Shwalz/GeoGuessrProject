@@ -1,6 +1,8 @@
-﻿using System.Net.Http;
+﻿using System.Collections.Generic;
+using System.Net.Http;
 using System.Text.Json;
 using System.Threading.Tasks;
+using System.Text;
 using System.Windows.Forms;
 
 namespace GeoGuessrWinForms.Logic
@@ -9,7 +11,7 @@ namespace GeoGuessrWinForms.Logic
     {
         private const string apiKey = "AIzaSyDLKBFsyOd9V-TvMIWl0cVXnsotmF-xKHY";
 
-        public static async Task<bool> IsStreetViewAvailable(double lat, double lng)
+        public static async Task<bool> IsStreetViewAvailable(double lat, double lng, List<string> errors)
         {
             try
             {
@@ -23,28 +25,46 @@ namespace GeoGuessrWinForms.Logic
 
                 string status = root.GetProperty("status").GetString();
 
-
                 if (status != "OK")
                 {
-                    MessageBox.Show($" Places not found: {lat}, {lng}\nResponse: {status}", "StreetView", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    errors.Add($"Not available: {lat}, {lng} → {status}");
+                    return false;
                 }
 
-                return status == "OK";
+                return true;
             }
             catch (HttpRequestException ex)
             {
-                MessageBox.Show("Error HTTP: " + ex.Message, "HTTP", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                errors.Add($"HTTP error at {lat},{lng}: {ex.Message}");
                 return false;
             }
             catch (JsonException ex)
             {
-                MessageBox.Show("Error with JSON: " + ex.Message, "JSON", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                errors.Add($"JSON error at {lat},{lng}: {ex.Message}");
                 return false;
             }
             catch (System.Exception ex)
             {
-                MessageBox.Show("Error: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                errors.Add($"General error at {lat},{lng}: {ex.Message}");
                 return false;
+            }
+        }
+
+        public static void ShowSummaryIfErrors(List<string> errors)
+        {
+            if (errors.Count > 0)
+            {
+                var sb = new StringBuilder();
+                sb.AppendLine("Street View is NOT available for some locations:\n");
+
+                foreach (var err in errors)
+                    sb.AppendLine(" - " + err);
+
+                MessageBox.Show(sb.ToString(), "StreetView Validation", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            }
+            else
+            {
+                MessageBox.Show("All locations passed validation!", "StreetView Validation", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
         }
     }

@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using GeoGuessrWinForms.Models;
 using GeoGuessrWinForms.Logic.Abstractions;
@@ -15,28 +14,19 @@ namespace GeoGuessrWinForms.Logic.Base
 
         public abstract Task InitializeAsync();
 
-        public GameLocation GetRandomLocation(string difficulty)
+        public GameLocation GetRandomLocation(string continent, string difficulty)
         {
-            if (locations.Count == 0)
+            string key = $"{continent}_{difficulty}";
+
+            if (!locations.ContainsKey(key) || locations[key].Count == 0)
                 throw new NoAvailableLocationsException();
 
-            if (!locations.ContainsKey(difficulty) || locations[difficulty].Count == 0)
-            {
-                foreach (var kvp in locations)
-                {
-                    if (kvp.Value.Count > 0)
-                    {
-                        difficulty = kvp.Key;
-                        break;
-                    }
-                }
-            }
-
-            var list = locations[difficulty];
+            var list = locations[key];
             return list[random.Next(list.Count)];
         }
 
         public abstract string GetMapHtmlWithMarkerScript();
         public abstract string GetStreetViewHtml(double lat, double lng);
     }
+
 }
