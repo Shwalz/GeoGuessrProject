@@ -8,8 +8,10 @@ namespace GeoGuessrWinForms.Models
 {
     public class GameSettings
     {
+        public string Difficulty { get; set; }
         public int TotalRounds { get; set; }
-        public string Difficulty { get; set; } 
         public int TimePerRoundSeconds { get; set; } = 90;
+        public string Continent { get; set; }
     }
+
 }

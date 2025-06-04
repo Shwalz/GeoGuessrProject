@@ -64,7 +64,7 @@ namespace GeoGuessrWinForms.Logic
 
             do
             {
-                location = locationProvider.GetRandomLocation(settings.Difficulty);
+                location = locationProvider.GetRandomLocation(settings.Continent, settings.Difficulty);
                 attempts++;
             } while (usedLocations.Contains(location) && attempts < 100);
 
@@ -84,6 +84,7 @@ namespace GeoGuessrWinForms.Logic
             gameForm.ShowMiniMap(mapHtml);
         }
 
+
         private void OnTimerTick(object sender, ElapsedEventArgs e)
         {
             timeLeft--;
@@ -102,23 +103,40 @@ namespace GeoGuessrWinForms.Logic
 
                 if (!guessMade)
                 {
-                    gameForm.BeginInvoke(new Action(() =>
+                    if (gameForm.IsHandleCreated)
                     {
-                        MessageBox.Show("You don't make a choice. Round was finished.", "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        gameForm.BeginInvoke(new Action(() =>
+                        {
+                            MessageBox.Show("You didn't make a choice. Round was finished.", "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                            GuessedLat = 999.0;
+                            GuessedLng = 999.0;
+                            ProcessGuess();
+                        }));
+                    }
+                    else
+                    {
                         GuessedLat = 999.0;
                         GuessedLng = 999.0;
                         ProcessGuess();
-                    }));
+                    }
                 }
                 else
                 {
-                    gameForm.BeginInvoke(new Action(() =>
+                    if (gameForm.IsHandleCreated)
+                    {
+                        gameForm.BeginInvoke(new Action(() =>
+                        {
+                            ProcessGuess();
+                        }));
+                    }
+                    else
                     {
                         ProcessGuess();
-                    }));
+                    }
                 }
             }
         }
+
 
         public void SetPlayerGuess(double lat, double lng)
         {

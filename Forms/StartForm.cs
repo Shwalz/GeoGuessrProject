@@ -1,8 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Windows.Forms;
 using GeoGuessrWinForms.Models;
 using GeoGuessrWinForms.Logic;
-using System.Collections.Generic;
 
 namespace GeoGuessrWinForms.Forms
 {
@@ -15,8 +15,11 @@ namespace GeoGuessrWinForms.Forms
 
         private void StartForm_Load(object sender, EventArgs e)
         {
-            comboBoxDifficulty.Items.AddRange(new string[] { "Easy", "Medium", "Hard" });
-            comboBoxDifficulty.SelectedIndex = -1;
+            comboBoxContinent.Items.AddRange(new string[] { "Europe", "Asia", "America", "Africa", "Oceania" });
+            comboBoxContinent.SelectedIndex = -1;
+
+            comboBoxDifficulty.Items.Clear();
+            comboBoxDifficulty.Enabled = false;
 
             trackBarRounds.Minimum = 1;
             trackBarRounds.Maximum = 5;
@@ -27,10 +30,31 @@ namespace GeoGuessrWinForms.Forms
             dataGridViewLeaderboard.ClearSelection();
 
             buttonStart.Visible = false;
+
+            comboBoxContinent.SelectedIndexChanged += comboBoxContinent_SelectedIndexChanged;
+            comboBoxDifficulty.SelectedIndexChanged += comboBoxDifficulty_SelectedIndexChanged;
+            textBoxNickname.TextChanged += textBoxNickname_TextChanged;
         }
 
-        private void comboBoxDifficulty_SelectedIndexChanged(object sender, EventArgs e) => ValidateForm();
-        private void textBoxNickname_TextChanged(object sender, EventArgs e) => ValidateForm();
+        private void comboBoxContinent_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            comboBoxDifficulty.Items.Clear();
+            comboBoxDifficulty.Items.AddRange(new string[] { "Easy", "Medium", "Hard" });
+            comboBoxDifficulty.Enabled = true;
+            comboBoxDifficulty.SelectedIndex = -1;
+
+            ValidateForm();
+        }
+
+        private void comboBoxDifficulty_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            ValidateForm();
+        }
+
+        private void textBoxNickname_TextChanged(object sender, EventArgs e)
+        {
+            ValidateForm();
+        }
 
         private void trackBarRounds_Scroll(object sender, EventArgs e)
         {
@@ -39,8 +63,10 @@ namespace GeoGuessrWinForms.Forms
 
         private void ValidateForm()
         {
-            buttonStart.Visible = !string.IsNullOrWhiteSpace(textBoxNickname.Text) &&
-                                  comboBoxDifficulty.SelectedIndex >= 0;
+            buttonStart.Visible =
+                !string.IsNullOrWhiteSpace(textBoxNickname.Text) &&
+                comboBoxContinent.SelectedIndex >= 0 &&
+                comboBoxDifficulty.SelectedIndex >= 0;
         }
 
         private void buttonStart_Click(object sender, EventArgs e)
@@ -49,6 +75,7 @@ namespace GeoGuessrWinForms.Forms
 
             var settings = new GameSettings
             {
+                Continent = comboBoxContinent.SelectedItem.ToString(),
                 Difficulty = comboBoxDifficulty.SelectedItem.ToString(),
                 TotalRounds = trackBarRounds.Value
             };
@@ -56,6 +83,12 @@ namespace GeoGuessrWinForms.Forms
             Hide();
             var gameForm = new GameForm(player, settings);
             gameForm.Show();
+        }
+
+        private void buttonAdminPanel_Click(object sender, EventArgs e)
+        {
+            var adminForm = new AdminPanelForm();
+            adminForm.ShowDialog();
         }
     }
 }
